@@ -37,7 +37,7 @@
       >
         <div class="relative flex  justify-center w-full md:w-1/2">
           <img
-            src="../../assets/images/Home/reservation.png"
+            :src="reservation"
             alt="Dining Table"
             class="w-[80%] sm:w-[60%] md:w-[90%] lg:w-[100%] max-w-[500px] md:max-w-[600px]"
           >
@@ -71,6 +71,10 @@
     </UContainer>
   </div>
 </template>
+
+<script setup>
+const reservation = '/images/Home/reservation.png';
+</script>
 
 
 

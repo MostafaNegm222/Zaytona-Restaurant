@@ -40,7 +40,7 @@
 
       <div class="relative w-full justify-end hidden md:block">
         <img
-          src="../../assets/images/Home/Group 4.png"
+          :src="Home"
           alt="hero image"
           class="w-[80%] md:w-[100%] max-w-[800px] absolute top-[0%] right-0"
         >
@@ -48,6 +48,11 @@
     </UContainer>
   </div>
 </template>
+
+<script setup>
+const Home = '/images/Home/Group 4.png'; 
+</script>
+
 <style scoped>
 @media (min-width: 768px) and (max-width: 1180px) {
   .hero img {
