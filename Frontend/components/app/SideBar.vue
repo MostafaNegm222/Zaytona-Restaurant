@@ -5,7 +5,7 @@
   >
     <div class="logo text-center py-[30px] px-0">
       <img
-        src="../../assets/images/LOGO.png"
+        :src="logo"
         alt="logo"
         class="w-20 md:w-35 mx-auto"
       >
@@ -397,8 +397,9 @@
 </template>
 
 <script setup>
+import logo from '../../assets/images/LOGO.png';
 const auth = useAuth();
-console.log(auth.logout);
+
 </script>
 
 <style scoped>
