@@ -1,4 +1,5 @@
 <template>
+ <div>
   <div
     class="sidebar bg-primary text-white h-[100vh] sticky top-0 hidden md:block overflow-hidden"
   >
@@ -392,6 +393,7 @@
       </div>
     </div>
   </UContainer>
+ </div>
 </template>
 
 <script setup>
