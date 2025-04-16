@@ -188,7 +188,7 @@
   <UContainer class="w-full md:hidden py-4 bg-primary">
     <div class="flex justify-between items-center">
       <div>
-        <img src="../../assets/images/LOGO.png" alt="logo" class="w-25" >
+        <img :src="logo" alt="logo" class="w-25" >
       </div>
       <div>
         <UDrawer direction="left">
