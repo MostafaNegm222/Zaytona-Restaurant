@@ -205,7 +205,7 @@
             >
               <div class="logo text-center py-[30px] px-0">
                 <img
-                  src="../../assets/images/LOGO.png"
+                  :src="logo"
                   alt="logo"
                   class="w-20 md:w-35 mx-auto"
                 >
@@ -431,11 +431,6 @@ const auth = useAuth();
 
 .nav-item:hover:before {
   transform: scaleY(1);
-}
-
-.nav-item .router-link-exact-active span {
-  font-weight: bold;
-  opacity: 1 !important;
 }
 
 .nav-item .router-link-exact-active span {
