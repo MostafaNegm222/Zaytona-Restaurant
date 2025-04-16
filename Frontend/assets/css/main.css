@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap");
+
+@import "tailwindcss";
+@import "@nuxt/ui";
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-playfair: "Playfair", serif;
+  --color-primary : #233866;
+  --color-dark-blue : #080D18;
+  --color-light-dark-blue : #0D1628;
+  --color-cream: #F6F3F0;
+  --ui-primary : #233866;
+  --ui-error:#A80303;
+}
+
+body {
+  font-family: var(--font-playfair);
+  overflow-x: hidden;
+}
+
