@@ -1,5 +1,6 @@
 <template>
-  <div
+  <div>
+    <div
     class="bg-[url('/assets/images/Home/Reviewsbg.png')] bg-contain min-h-[50vh] md:min-h-[70vh]"
   >
     <UContainer
@@ -103,5 +104,6 @@
         </p>
       </div>
     </UContainer>
+  </div>
   </div>
 </template>
