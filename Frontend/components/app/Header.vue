@@ -42,7 +42,7 @@ const closeMenu = () => {
       <div>
         <nuxt-link to="/">
           <img
-            src="../../assets/images/Logo.png"
+            src="../../assets/images/logos/Logo.png"
             alt="logo image"
             class="w-35"
           >
@@ -133,7 +133,7 @@ const closeMenu = () => {
       <div class="flex flex-col p-5 h-full">
         <div class="flex justify-between items-center mb-8">
           <img
-            src="../../assets/images/Logo.png"
+            src="../../assets/images/logos/Logo.png"
             alt="logo image"
             class="w-32"
           >
