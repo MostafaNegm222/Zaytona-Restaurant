@@ -80,7 +80,21 @@
     </div>
     
     <!-- Related Items Section -->
-    <MenuRelatedItems v-if="item" :current-item="item" />
+    <!-- Loading state for related items -->
+    <div v-if="loading" class="mt-12">
+      <h2 class="text-2xl font-bold text-primary mb-6">Related Items</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="n in 3" :key="n" class="bg-slate-200/10 backdrop-blur-md shadow-lg rounded-xl border border-slate-100 p-4">
+          <USkeleton class="h-40 w-full mb-4 rounded-xl" />
+          <USkeleton class="h-6 w-3/4 mb-3" />
+          <USkeleton class="h-4 w-1/2 mb-2" />
+          <USkeleton class="h-10 w-full mt-4" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Display related items when loaded -->
+    <MenuRelatedItems v-if="item && !loading" :current-item="item" />
   </UContainer>
 </template>
 

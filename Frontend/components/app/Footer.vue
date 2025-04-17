@@ -105,5 +105,5 @@
 </template>
 
 <script setup>
-const logo = '/images/LOGO.png';
+import logo from '../../assets/images/LOGO.png';
 </script>

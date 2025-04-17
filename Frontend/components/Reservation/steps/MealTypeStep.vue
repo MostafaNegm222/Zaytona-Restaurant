@@ -24,7 +24,7 @@
       orientation="vertical"
       class="h-48 hidden lg:block"
     />
-    <div class="px-8 lg:w-[60%]">
+    <div class="px-8 lg:w-[60%] w-full">
       <h1
         class="text-xl md:text-2xl font-bold mb-4 text-dark-blue cursor-default"
       >

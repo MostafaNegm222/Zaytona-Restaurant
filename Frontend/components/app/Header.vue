@@ -3,6 +3,15 @@ const auth = useAuth();
 const isMenuOpen = ref(false);
 const userData = useCookie("userData");
 
+// Add body lock when menu is open
+watch(isMenuOpen, (value) => {
+  if (value) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
 const items = [
   {
     label: "Profile",
@@ -18,13 +27,16 @@ const items = [
     },
   },
 ];
+
+const closeMenu = () => {
+  isMenuOpen.value = false;
+};
 </script>
 
 <template>
   <div>
     <header
-    v-if="!isMenuOpen"
-    class="bg-primary text-playfair text-xl text-amber-50 fixed top-0 left-0 right-0 z-4 py-4"
+    class="bg-primary text-playfair text-xl text-amber-50 fixed top-0 left-0 right-0 z-10 py-4"
   >
     <UContainer class="flex justify-between items-center">
       <div>
@@ -37,18 +49,12 @@ const items = [
         </nuxt-link>
       </div>
 
-      <div class="hidden lg:flex gap-[40px] nav">
+      <div class="hidden lg:flex gap-10 nav">
         <nuxt-link to="/" class="navigate relative">Home</nuxt-link>
-        <nuxt-link to="/user/Tables" class="navigate relative"
-          >Reservation</nuxt-link
-        >
+        <nuxt-link to="/user/Tables" class="navigate relative">Reservation</nuxt-link>
         <nuxt-link to="/user/Menu" class="navigate relative">Menu</nuxt-link>
-        <nuxt-link to="/user/OurStory" class="navigate relative"
-          >Our Story</nuxt-link
-        >
-        <nuxt-link to="/user/ContactUs" class="navigate relative"
-          >Contact Us</nuxt-link
-        >
+        <nuxt-link to="/user/OurStory" class="navigate relative">Our Story</nuxt-link>
+        <nuxt-link to="/user/ContactUs" class="navigate relative">Contact Us</nuxt-link>
       </div>
 
       <div class="hidden lg:block">
@@ -61,7 +67,7 @@ const items = [
                 align: 'start',
               }"
               :ui="{
-                content: 'w-48 cursor-pointer ',
+                content: 'w-48 cursor-pointer',
               }"
             >
               <UButton
@@ -85,90 +91,133 @@ const items = [
         </appAuthChecker>
       </div>
 
-      <button
-        class="block lg:hidden focus:outline-none"
-        @click="isMenuOpen = !isMenuOpen"
-      >
-        <span class="text-3xl">&#9776;</span>
-      </button>
+      <UButton
+        class="block lg:hidden"
+        color="white"
+        variant="ghost" 
+        icon="i-lucide-menu"
+        @click="isMenuOpen = true"
+      />
     </UContainer>
   </header>
 
-  <div
-    v-if="isMenuOpen"
-    class="fixed top-0 left-0 h-screen w-[70%] bg-primary text-white z-20"
+  <!-- Overlay (separate from drawer) -->
+  <transition 
+    enter-active-class="transition-opacity duration-300 ease-out" 
+    enter-from-class="opacity-0" 
+    enter-to-class="opacity-100"
+    leave-active-class="transition-opacity duration-300 ease-in" 
+    leave-from-class="opacity-100" 
+    leave-to-class="opacity-0"
   >
-    <UContainer class="flex flex-col p-5 h-full">
-      <button
-        class="absolute top-4 right-6 text-3xl"
-        @click="isMenuOpen = false"
-      >
-        &times;
-      </button>
+    <div 
+      v-if="isMenuOpen" 
+      class="fixed inset-0 z-20 bg-black/50"
+      @click="closeMenu"
+    />
+  </transition>
 
-      <img
-        src="../../assets/images/Logo.png"
-        alt="logo image"
-        class="w-[60%] md:w-[100%] max-w-[150px] mb-6"
-      >
+  <!-- Mobile Navigation Drawer - now opens from left -->
+  <transition 
+    enter-active-class="transition-transform duration-300 ease-out" 
+    enter-from-class="-translate-x-full" 
+    enter-to-class="translate-x-0"
+    leave-active-class="transition-transform duration-300 ease-in" 
+    leave-from-class="translate-x-0" 
+    leave-to-class="-translate-x-full"
+  >
+    <div
+      v-if="isMenuOpen"
+      class="fixed top-0 left-0 h-screen w-4/5 max-w-sm bg-primary text-white z-30 shadow-2xl"
+    >
+      <div class="flex flex-col p-5 h-full">
+        <div class="flex justify-between items-center mb-8">
+          <img
+            src="../../assets/images/Logo.png"
+            alt="logo image"
+            class="w-32"
+          >
+          <UButton
+            color="white"
+            variant="ghost"
+            icon="i-lucide-x"
+            class="text-white"
+            @click="closeMenu"
+          />
+        </div>
 
-      <nuxt-link to="/" class="py-4 text-xl" @click="isMenuOpen = false"
-        >Home</nuxt-link
-      >
-      <nuxt-link
-        to="/user/Tables"
-        class="py-4 text-2xl"
-        @click="isMenuOpen = false"
-        >Reservation</nuxt-link
-      >
-      <nuxt-link
-        to="/user/Menu"
-        class="py-4 text-2xl"
-        @click="isMenuOpen = false"
-        >Menu</nuxt-link
-      >
-      <nuxt-link
-        to="/user/OurStory"
-        class="py-4 text-2xl"
-        @click="isMenuOpen = false"
-        >Our Story</nuxt-link
-      >
-      <nuxt-link
-        to="/user/ContactUs"
-        class="py-4 text-2xl"
-        @click="isMenuOpen = false"
-        >Contact Us</nuxt-link
-      >
-      <nuxt-link
-        to="/user/Profile"
-        class="py-4 text-2xl"
-        @click="isMenuOpen = false"
-        >Profile</nuxt-link
-      >
+        <div class="flex flex-col space-y-1">
+          <nuxt-link 
+            to="/" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Home</nuxt-link>
+          
+          <nuxt-link 
+            to="/user/Tables" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Reservation</nuxt-link>
+          
+          <nuxt-link 
+            to="/user/Menu" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Menu</nuxt-link>
+          
+          <nuxt-link 
+            to="/user/OurStory" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Our Story</nuxt-link>
+          
+          <nuxt-link 
+            to="/user/ContactUs" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Contact Us</nuxt-link>
+          
+          <nuxt-link 
+            to="/user/Profile" 
+            class="py-4 text-xl hover:bg-white/10 px-2 rounded-lg transition-colors" 
+            @click="closeMenu"
+          >Profile</nuxt-link>
+        </div>
 
-      <div class="mt-auto w-full">
-        <appAuthChecker>
-          <template #auth>
-            <p
-              class="block py-4 text-2xl underline text-center underline-offset-4"
-              @click="auth.logout"
-            >
-              Log Out
-            </p>
-          </template>
-          <template #unAuth>
-            <nuxt-link to="/auth/Login" class="block py-4 text-2xl text-center">
-              Sign in
-            </nuxt-link>
-          </template>
-        </appAuthChecker>
+        <div class="mt-auto mb-4 border-t border-white/20 pt-4">
+          <appAuthChecker>
+            <template #auth>
+              <button
+                class="w-full py-4 text-xl flex items-center justify-center gap-2 hover:bg-white/10 rounded-lg transition-colors"
+                @click="auth.logout"
+              >
+                <UIcon name="i-lucide-log-out" />
+                Log Out
+              </button>
+            </template>
+            <template #unAuth>
+              <nuxt-link 
+                to="/auth/Login" 
+                class="w-full py-4 text-xl flex items-center justify-center gap-2 bg-white text-primary rounded-lg transition-colors hover:bg-white/90"
+                @click="closeMenu"
+              >
+                <UIcon name="i-lucide-log-in" />
+                Sign in
+              </nuxt-link>
+            </template>
+          </appAuthChecker>
+        </div>
       </div>
-    </UContainer>
-  </div>
+    </div>
+  </transition>
   </div>
 </template>
 
 <style scoped>
+.navigate {
+  position: relative;
+}
+
 .navigate::after {
   bottom: -2px;
   content: "";
@@ -191,13 +240,15 @@ const items = [
     font-size: 17px;
   }
 }
+
 .navigate.router-link-active {
-  font-weight:bolder;
+  font-weight: bolder;
   width: fit-content;
   border-bottom: 2px solid #fff;
 }
 
 .py-4.router-link-active {
   font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

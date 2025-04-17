@@ -82,8 +82,8 @@ export const useAuth = () => {
     token.value = null;
     refreshToken.value = null;
     userData.value = null;
-    // router.push("/auth/login")
-    window.location.href = `https://zaytona-restaurant.vercel.app/auth/login`
+    router.push("/auth/Login")
+    // window.location.href = `https://zaytona-restaurant.vercel.app/auth/login`
   }
   
   // forget password

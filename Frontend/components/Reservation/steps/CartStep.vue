@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-col lg:flex-row items-center w-full py-8">
+  <div>
+    <div class="flex flex-col lg:flex-row items-center w-full py-8">
     <div class="px-8 lg:w-[40%]">
       <div>
         <h1
@@ -214,16 +215,19 @@
                     :alt="item.title || item.name"
                     class="h-full w-full object-contain"
                   >
+                  
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                  <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-lg cursor-default">
+                    {{ item.title || item.name }}
+                  </h3>
                   <div
-                    class="absolute top-0 right-0 m-2 px-3 py-1 text-xl  text-primary cursor-default font-bold"
+                    class="text-xl  text-primary cursor-default font-bold"
                   >
                     {{ item.price }} EGP
                   </div>
-                </div>
-                <div class="p-4 flex flex-col flex-grow">
-                  <h3 class="font-bold text-lg mb-2 cursor-default">
-                    {{ item.title || item.name }}
-                  </h3>
+                  </div>
                   <p class="text-gray-600 mb-auto cursor-default">
                     {{ item.description }}
                   </p>
@@ -265,38 +269,54 @@
             </div>
           </div>
           
-          <!-- Pagination Controls -->
-          <div v-if="totalPages > 1" class="flex justify-center mt-8">
-            <div class="flex space-x-2">
-              <UButton
-                icon="i-heroicons-chevron-left"
-                color="primary"
-                variant="ghost"
-                class="cursor-pointer flex justify-center items-center"
-                :disabled="currentPage === 1"
-                @click="currentPage--"
-              />
-              <div class="flex space-x-1">
-                <UButton
-                  v-for="page in paginationRange"
-                  :key="page"
-                  :variant="currentPage === page ? 'solid' : 'outline'"
-                  color="primary"
-                  class="w-10 h-10 cursor-pointer flex justify-center items-center"
-                  @click="currentPage = page"
-                >
-                  {{ page }}
-                </UButton>
-              </div>
-              <UButton
-                icon="i-heroicons-chevron-right"
-                color="primary"
-                variant="ghost"
-                class="cursor-pointer"
-                :disabled="currentPage === totalPages"
-                @click="currentPage++"
-              />
-            </div>
+          <!-- Pagination Controls - Updated to match the style in index.vue -->
+          <div v-if="totalPages > 1" class="flex items-center justify-center my-8">
+            <!-- Previous Button -->
+            <button 
+              :disabled="currentPage === 1"
+              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
+              :class="currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'"
+              @click="currentPage--"
+            >
+              <span>Previous</span>
+            </button>
+            
+            <!-- Ellipsis if needed -->
+            <span v-if="showLeftEllipsis" class="mx-1">...</span>
+            
+            <!-- Page Numbers -->
+            <button
+              v-for="page in visiblePageNumbers"
+              :key="page"
+              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
+              :class="currentPage === page ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'"
+              @click="currentPage = page"
+            >
+              <span>{{ page }}</span>
+            </button>
+            
+            <!-- Ellipsis if needed -->
+            <span v-if="showRightEllipsis" class="mx-1">...</span>
+            
+            <!-- Last Page -->
+            <button
+              v-if="showLastPageButton"
+              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
+              :class="currentPage === totalPages ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'"
+              @click="currentPage = totalPages"
+            >
+              <span>{{ totalPages }}</span>
+            </button>
+            
+            <!-- Next Button -->
+            <button 
+              :disabled="currentPage === totalPages"
+              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
+              :class="currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'"
+              @click="currentPage++"
+            >
+              <span>Next</span>
+            </button>
           </div>
         </div>
 
@@ -346,6 +366,7 @@
       </div>
     </div>
   </Teleport>
+  </div>
 </template>
 
 <script setup>
@@ -367,6 +388,7 @@ const error = ref(null);
 // Pagination
 const currentPage = ref(1);
 const itemsPerPage = 6; // Show 6 items per page
+const visiblePageCount = 5; // For consistent pagination display
 
 // Initialize cart if not already done
 if (!props.formData.cart) {
@@ -433,43 +455,40 @@ const totalPages = computed(() => {
   return Math.ceil(filteredMenuByCategory.value.length / itemsPerPage);
 });
 
-// Create pagination range (for display)
-const paginationRange = computed(() => {
-  const range = [];
-  const maxVisible = 5; // Max number of page buttons to show
+// Create pagination range (for display) - updated to match index.vue pagination
+const visiblePageNumbers = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const halfVisible = Math.floor(visiblePageCount / 2);
   
-  if (totalPages.value <= maxVisible) {
-    // Show all pages
-    for (let i = 1; i <= totalPages.value; i++) {
-      range.push(i);
-    }
-  } else {
-    // Always show first page
-    range.push(1);
-    
-    // Calculate start and end of central range
-    let start = Math.max(2, currentPage.value - 1);
-    let end = Math.min(totalPages.value - 1, currentPage.value + 1);
-    
-    // Adjust when at edges
-    if (currentPage.value <= 2) {
-      end = 4;
-    } else if (currentPage.value >= totalPages.value - 1) {
-      start = totalPages.value - 3;
-    }
-    
-    // Add page numbers
-    for (let i = start; i <= end; i++) {
-      range.push(i);
-    }
-    
-    // Always show last page
-    if (!range.includes(totalPages.value)) {
-      range.push(totalPages.value);
-    }
+  // Simple case: if we have fewer pages than our display limit, show all
+  if (total <= visiblePageCount + 2) {
+    return Array.from({ length: total }, (_, i) => i + 1);
   }
   
-  return range;
+  let start = Math.max(2, current - halfVisible);
+  let end = Math.min(total - 1, start + visiblePageCount - 1);
+  
+  // Adjust start if we're near the end
+  if (end === total - 1) {
+    start = Math.max(2, end - visiblePageCount + 1);
+  }
+  
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+});
+
+// Logic for showing ellipsis and first/last buttons
+const showLastPageButton = computed(() => {
+  return totalPages.value > 2 && !visiblePageNumbers.value.includes(totalPages.value);
+});
+
+const showLeftEllipsis = computed(() => {
+  return visiblePageNumbers.value.length > 0 && visiblePageNumbers.value[0] > 2;
+});
+
+const showRightEllipsis = computed(() => {
+  return visiblePageNumbers.value.length > 0 && 
+         visiblePageNumbers.value[visiblePageNumbers.value.length - 1] < totalPages.value - 1;
 });
 
 // Get paginated menu items for current page

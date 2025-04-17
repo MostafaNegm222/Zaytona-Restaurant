@@ -77,13 +77,13 @@
 
                 <div class="flex justify-end mt-5 gap-4">
                   <UButton
-                    class="mr-2 px-2 py-1 md:px-10 md:py-2 text-sm bg-transparent border border-primary text-primary rounded cursor-pointer hover:text-white"
+                    class="mr-2 px-6 py-2 md:px-10 md:py-2 text-sm bg-transparent border border-primary text-primary rounded cursor-pointer hover:text-white"
                     @click="isModalOpen = false"
                   >
                     Cancel
                   </UButton>
                   <UButton
-                    class="px-2 py-1 md:px-10 md:py-2 text-sm bg-primary text-white rounded cursor-pointer"
+                    class="px-6 py-2 md:px-10 md:py-2 text-sm bg-primary text-white rounded cursor-pointer"
                     @click="confirmOnSitePayment"
                   >
                     Confirm

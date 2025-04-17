@@ -26,7 +26,7 @@ onMounted(async () => {
       <div
         class="flex mt-8 flex-col md:flex-row justify-between items-start md:items-center w-full"
       >
-        <div class="flex flex-col gap-12">
+        <div class="flex flex-col gap-12 ms-4 lg:ms-0">
           <div>
             <h4 class="text-xl font-bold">Email Address:</h4>
             <p>{{ user.email || "Unknown Email" }}</p>

@@ -3,7 +3,7 @@
     <!-- Custom Stepper -->
     <template #steps>
       <ol
-        class="flex items-center justify-center flex-wrap lg:flex-nowrap   w-full text-sm font-medium text-center text-gray-500 sm:text-base"
+        class="flex items-center justify-center flex-wrap lg:flex-nowrap   w-full text-sm font-medium text-center text-gray-500 sm:text-base gap-4 md:gap-0"
       >
         <li
           v-for="(step, index) in steps"
@@ -71,23 +71,23 @@
     <template #content>
       <!-- Step Content -->      
       <div
-        class="bg-slate-200/10 backdrop-blur-md shadow-lg mb-8 md:mb-12 p-2 lg:p-12 overflow-hidden relative z-2 lg:rounded-tl-[30%] lg:rounded-br-[30%] border border-slate-100 w-full"
+        class="bg-slate-200/10 backdrop-blur-md shadow-lg mb-8 md:mb-12 p-2 lg:p-12 overflow-hidden relative z-2 lg:rounded-tl-[30%] lg:rounded-br-[30%] border border-slate-100 w-full flex flex-col"
       >
-        <div>
             <component
             :is="steps[currentStep].component"
             :form-data="formData"
+            class=" flex-grow-1"
             @update-data="updateFormData"
           />
-        </div>
         <p v-if="errorMessage" class="text-red-500 bg-red-100 p-2 rounded mb-6 text-center w-fit mx-auto">
           {{ errorMessage }}
         </p>    
         <!-- Navigation Buttons -->
-        <div class="flex justify-between mb-4 me-9 mt-4">
+        <div class="flex justify-between my-4 me-0 lg:me-9">
           <button
             v-if="currentStep > 0"
-            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 cursor-pointer flex items-center "
+            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 cursor-pointer flex items-center"
+            :disabled="isLoading"
             @click="previousStep"
           >
             <svg
@@ -111,7 +111,7 @@
             <button
               v-if="currentStep < steps.length - 1"
               class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-              :disabled="!isStepValid"
+              :disabled="!isStepValid || isLoading"
               @click="nextStep"
             >
               Next
@@ -133,24 +133,34 @@
 
             <button
               v-if="currentStep === steps.length - 1"
-              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary cursor-pointer flex items-center md:mr-5 "
+              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary cursor-pointer flex items-center md:mr-5"
+              :disabled="isLoading"
               @click="submitForm"
             >
-              <svg
-                class="w-4 h-4 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              Submit
+              <template v-if="isLoading">
+                <svg class="animate-spin w-4 h-4 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+                Processing...
+              </template>
+              <template v-else>
+                <svg
+                  class="w-4 h-4 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Submit
+              </template>
             </button>
           </div>
         </div>
@@ -176,6 +186,7 @@ definePageMeta({
 const errorMessage = ref("")
 const router = useRouter();
 const currentStep = ref(0);
+const isLoading = ref(false);
 const formData = ref({
   mealType: null,
   date: {},
@@ -221,28 +232,34 @@ function previousStep() {
 }
 
 async function submitForm() {
+  if (isLoading.value) return; // Prevent multiple submissions
+  
   try {
-    errorMessage.value = ""
+    isLoading.value = true;
+    errorMessage.value = "";
     console.log("Submitting reservation data:", formData.value);
-    console.log( typeof formData.value.date);
-    const response = await useApi('/checkOut/addCheckout' ,'post' , formData.value)
+    console.log(typeof formData.value.date);
+    
+    const response = await useApi('/checkOut/addCheckout', 'post', formData.value);
     console.log(response);
+    
     if (formData.value.paymentMethod == 'creditCard') {
       window.location.href = response.url;
     } else {
-        router.push('/user/profile/reservations')
+      router.push('/user/profile/reservations');
     }
   } catch (error) {
     console.error("Error submitting form:", error);
 
     if (error?.data?.message) {
-    errorMessage.value = error.data.message;
-  } else if (error?.response?.data?.message) {
-    errorMessage.value = error.response.data.message;
-  } else {
-    errorMessage.value = "Something went wrong while submitting the form.";
-  }
-
+      errorMessage.value = error.data.message;
+    } else if (error?.response?.data?.message) {
+      errorMessage.value = error.response.data.message;
+    } else {
+      errorMessage.value = "Something went wrong while submitting the form.";
+    }
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>

@@ -70,8 +70,10 @@ const deleteAccount = async () => {
         </template>
 
         <template #footer>
-          <UButton label="Cancel" color="neutral" variant="outline" @click="open = false" />
-          <UButton label="Delete" color="error" @click="deleteAccount" />
+          <div class="flex justify-end gap-4">
+            <UButton label="Cancel" color="neutral" variant="outline" class="px-6 py-2 rounded" @click="open = false" />
+            <UButton label="Delete" color="error" class="px-6 py-2 rounded" @click="deleteAccount" />
+          </div>
         </template>
       </UModal>
     </div>

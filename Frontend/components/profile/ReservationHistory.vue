@@ -49,7 +49,8 @@ const cancelReservation = async () => {
 </script>
 
 <template>
-  <div class="mb-6 ms-0 md:ms-14 flex justify-between">
+  <div>
+    <div class="mb-6 ms-0 md:ms-14 flex justify-between">
     <h2 class="text-xl md:text-3xl font-semibold">Reservations</h2>
     <UButton class="md:text-xl text-sm">
       <nuxt-link to="/user/tables">Reserve Table</nuxt-link>
@@ -66,13 +67,13 @@ const cancelReservation = async () => {
       :key="index"
       class="flex flex-col rounded-lg mb-4 transition-all duration-300 ease-in-out transform"
     >
-      <h2 class="text-xl md:text-2xl font-bold text-center">Reservation Summary</h2>
+      <h2 class="text-xl md:text-2xl font-bold text-center mt-4">Reservation Summary</h2>
       <h4 class="text-center my-2">Guest Name</h4>
       <h3 class="text-center font-bold text-lg md:text-xl">
         {{ reservation.createdBy.userName || "Unknown Name" }}
       </h3>
 
-      <div class="my-4 w-[80%] mx-auto">
+      <div class="my-4 md:w-[80%] w-full mx-auto p-2">
         <div class="flex justify-between items-center">
           <h2 class="font-bold md:text-lg">Status:</h2>
           <span
@@ -140,7 +141,7 @@ const cancelReservation = async () => {
     >
       <UButton
       v-if="reservation.status == 'pending' "
-      class="bg-primary text-white px-4 py-2 mt-5 rounded cursor-pointer mx-auto hover:bg-primary"
+      class="bg-primary text-white px-4 py-2 my-5 rounded cursor-pointer mx-auto hover:bg-primary"
         label="Open"
         color="neutral"
         variant="subtle"
@@ -183,6 +184,7 @@ const cancelReservation = async () => {
     
     </ProfileWrapper>
   </TransitionGroup>
+  </div>
 </template>
 
 <style scoped>

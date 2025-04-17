@@ -1,5 +1,6 @@
 <template>
     <div v-if="relatedItems.length > 0" class="my-8">
+      <hr class="my-12 text-primary ">
       <h2 class="text-2xl font-bold text-primary mb-6">You May Also Like</h2>
       
       <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -17,7 +18,7 @@
                 loading="lazy"
               >
             </div>
-            <div class="bg-slate-200/10 backdrop-blur-md shadow-lg rounded-b-lg border border-slate-100 py-6 px-6">
+            <div class="bg-slate-200/10 backdrop-blur-md shadow-lg rounded-b-lg border border-slate-100 py-6 px-6 h-[210px] flex flex-col justify-between">
               <div>
                 <div class="flex justify-between items-center">
                   <h2 class="text-2xl text-primary font-bold text-ellipsis overflow-hidden whitespace-nowrap">{{ item.name }}</h2>

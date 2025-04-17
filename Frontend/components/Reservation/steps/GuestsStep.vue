@@ -21,7 +21,7 @@
   
       <USeparator color="primary" type="solid" orientation="vertical" class="h-48 hidden lg:block" />
   
-      <div class="px-8 lg:w-[60%]">
+      <div class="px-8 lg:w-[60%] w-full">
         <h1 class="text-xl md:text-2xl font-bold mb-4 text-primary cursor-default">
           Total Attendance
         </h1>
@@ -34,8 +34,8 @@
           </p>
         </div>
   
-        <div class="mt-8">
-          <UInputNumber v-model="guestCount" :min="1" :max="10" @update:model-value="updateGuests" />
+        <div class="mt-8 flex justify-center md:justify-start">
+          <UInputNumber v-model="guestCount" class="flex-grow-1 md:flex-grow-0" :min="1" :max="10" @update:model-value="updateGuests" />
           <p v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</p>
         </div>
 

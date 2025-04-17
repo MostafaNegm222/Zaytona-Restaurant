@@ -100,6 +100,10 @@ const openDeleteModal = (itemId) => {
   open.value = true;
 };
 
+const totalPages = computed(() => {
+  return Math.ceil(filteredData.value.length / itemsPerPage);
+});
+
 // Handle delete item
 const deleteItem = async () => {
   try {
@@ -118,7 +122,17 @@ const deleteItem = async () => {
 
       // Refresh data after deletion
       await fetchMenuItems();
-      page.value = 1;
+      
+      const isLastItemOnPage = paginatedData.value.length === 1;
+      if (isLastItemOnPage && page.value > 1) {
+        nextTick(() => {
+          const newTotalPages = Math.ceil(filteredData.value.length / itemsPerPage);
+          page.value = Math.min(page.value - 1, newTotalPages || 1);
+        });
+      } else if (page.value > totalPages.value) {
+        page.value = Math.max(totalPages.value, 1);
+      }
+
     } else {
       throw new Error(response?.message || "Failed to delete item");
     }
@@ -396,14 +410,14 @@ const handleAddImageUpload = (event) => {
                 <div class="flex flex-col md:flex-row justify-between gap-5">
                   <UButton
                     type="button"
-                    class="md:text-xl text-sm px-16 cursor-pointer bg-transparent text-primary border border-primary flex items-center justify-center hover:text-white"
+                    class="md:text-xl text-sm px-16 cursor-pointer bg-transparent text-primary border border-primary flex items-center justify-center hover:text-white disabled:bg-transparent"
                     :disabled="isAddLoading"
                     @click="addModalOpen = false"
                     >Cancel</UButton
                   >
                   <UButton
                     type="submit"
-                    class="md:text-xl text-sm px-16 cursor-pointer flex justify-center items-center"
+                    class="md:text-xl text-sm px-16 cursor-pointer flex justify-center items-center order-first md:order-last"
                     :loading="isAddLoading"
                     :disabled="isAddLoading"
                   >
@@ -485,7 +499,7 @@ const handleAddImageUpload = (event) => {
               label="Edit"
               color="neutral"
               variant="subtle"
-              class="bg-primary text-white hover:text-primary cursor-pointer"
+              class="bg-primary text-white hover:text-primary cursor-pointer px-8 py-2 mt-4"
               @click="openEditModal(menuItem)"
             />
 
@@ -531,14 +545,14 @@ const handleAddImageUpload = (event) => {
                   <div class="flex flex-col md:flex-row justify-between gap-5">
                     <UButton
                       type="button"
-                      class="md:text-xl text-sm px-16 cursor-pointer bg-transparent text-primary border border-primary flex items-center justify-center hover:text-white"
+                      class="md:text-xl text-sm px-16 cursor-pointer bg-transparent text-primary border border-primary flex items-center justify-center hover:text-white disabled:bg-transparent"
                       :disabled="isEditLoading"
                       @click="editModalOpen = false"
                       >Cancel</UButton
                     >
                     <UButton
                       type="submit"
-                      class="md:text-xl text-sm px-16 cursor-pointer flex justify-center items-center"
+                      class="md:text-xl text-sm px-16 cursor-pointer flex justify-center items-center order-first md:order-last "
                       :loading="isEditLoading"
                       :disabled="isEditLoading"
                     >
@@ -551,14 +565,14 @@ const handleAddImageUpload = (event) => {
           </UModal>
 
           <UModal
-            v-model:open="open"
+            v-model="open"
             :ui="{
               content:
                 'bg-transparent border-0 shadow-none rounded-none divided-none ring-transparent ',
             }"
           >
             <UButton
-              class="md:text-xl text-sm cursor-pointer"
+              class="md:text-xl text-lg cursor-pointer bg-red-700 text-white px-8 py-2 hover:text-red-700 mt-4"
               label="Delete"
               color="neutral"
               variant="subtle"
@@ -577,13 +591,13 @@ const handleAddImageUpload = (event) => {
 
                 <div class="flex justify-end mt-8 gap-4">
                   <UButton
-                    class="mr-2 px-2 py-1 md:px-16 md:py-2 text-sm border border-primary text-primary bg-transparent rounded cursor-pointer"
+                    class="mr-2 px-8 py-2 md:px-16 md:py-2 text-sm border border-primary text-primary bg-transparent rounded cursor-pointer"
                     @click="open = false"
                   >
                     Cancel
                   </UButton>
                   <UButton
-                    class="px-2 py-1 md:px-16 md:py-2 text-sm  text-white bg-red-700 rounded cursor-pointer hover:text-white"
+                    class="px-8 py-2 md:px-16 md:py-2 text-sm  text-white bg-red-700 rounded cursor-pointer hover:text-white"
                     @click="deleteItem"
                   >
                     Delete

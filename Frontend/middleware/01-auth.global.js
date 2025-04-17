@@ -2,30 +2,29 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const token = useCookie("token");
   const user = useCookie("userData");
 
-  const authPages = [
-    'auth/Login',
-    'auth/SignUp',
-    'auth/ForgetPassword',
-    'auth/OTP',
-    'auth/ResetPassword',
-  ];
+  const path = to.path.toLowerCase(); // Normalize to lowercase
 
-  const userProtectedRoutes = ["/user/Tables" , 'user/profile','user/profile/Edit','user/profile/Reservations'];
-  const adminOnlyRoutes = ["/admin" , "/admin/Tables","/admin/Users"];
+  const isAuthPage = path.startsWith("/auth");
+  const isProfilePage = path.startsWith("/user/profile");
+  const isUserTables = path.startsWith("/user/tables");
+  const isUserMenuDetail = path.startsWith("/user/menu/") && path !== "/user/menu";
+  const isAdminRoute = path.startsWith("/admin");
 
-  // Redirect unauthenticated users trying to access protected pages
-  if (!token.value && [...userProtectedRoutes, ...adminOnlyRoutes].includes(to.path)) {
+  const isUserProtected =
+    isUserTables || isProfilePage || isUserMenuDetail;
+
+  // Redirect unauthenticated users
+  if (!token.value && (isUserProtected || isAdminRoute)) {
     return navigateTo("/auth/login");
   }
 
   // Prevent logged-in users from accessing auth pages
-  if (token.value && authPages.includes(to.path)) {
+  if (token.value && isAuthPage) {
     return navigateTo("/");
   }
 
   // Prevent normal users from accessing admin routes
-  if (token.value && user.value?.role === "User" && adminOnlyRoutes.includes(to.path)) {
+  if (token.value && user.value?.role === "User" && isAdminRoute) {
     return navigateTo("/");
   }
 });
-
