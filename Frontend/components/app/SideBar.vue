@@ -5,7 +5,7 @@
   >
     <div class="logo text-center py-[30px] px-0">
       <img
-        :src="logo"
+        src="/assets/images/LOGO.png"
         alt="logo"
         class="w-20 md:w-35 mx-auto"
       >
@@ -188,7 +188,7 @@
   <UContainer class="w-full md:hidden py-4 bg-primary">
     <div class="flex justify-between items-center">
       <div>
-        <img :src="logo" alt="logo" class="w-25" >
+        <img src="/assets/images/LOGO.png" alt="logo" class="w-25" >
       </div>
       <div>
         <UDrawer direction="left">
@@ -205,7 +205,7 @@
             >
               <div class="logo text-center py-[30px] px-0">
                 <img
-                  :src="logo"
+                  src="/assets/images/LOGO.png"
                   alt="logo"
                   class="w-20 md:w-35 mx-auto"
                 >
@@ -397,9 +397,7 @@
 </template>
 
 <script setup>
-const logo = '../../assets/images/LOGO.png';
 const auth = useAuth();
-
 </script>
 
 <style scoped>

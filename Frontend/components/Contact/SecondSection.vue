@@ -68,8 +68,8 @@
 
       <div class="flex justify-center md:justify-end order-first md:order-0">
         <img
-          :src="img2"
-          alt="image 1"
+          src="/assets/images/Contact/img2.png"
+          alt="image 2"
           class="w-[80%]"
         >
       </div>
@@ -82,8 +82,8 @@
     >
       <div class="flex justify-center md:justify-start">
         <img
-          :src="img1"
-          alt="image 2"
+          src="/assets/images/Contact/img1.png"
+          alt="image 1"
           class="w-[80%]"
         >
       </div>
@@ -108,7 +108,3 @@
   </div>
 </template>
 
-<script setup>
-  const img1 = '../../assets/images/contact/img1.png';
-  const img2 = '../../assets/images/contact/img2.png';
-</script>

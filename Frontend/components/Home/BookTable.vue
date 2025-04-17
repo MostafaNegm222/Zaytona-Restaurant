@@ -37,7 +37,7 @@
       >
         <div class="relative flex  justify-center w-full md:w-1/2">
           <img
-            :src="reservation"
+            src="/assets/images/Home/Reservation.png"
             alt="Dining Table"
             class="w-[80%] sm:w-[60%] md:w-[90%] lg:w-[100%] max-w-[500px] md:max-w-[600px]"
           >
@@ -72,9 +72,6 @@
   </div>
 </template>
 
-<script setup>
-const reservation = '../../assets/images/Home/reservation.png';
-</script>
 
 
 
