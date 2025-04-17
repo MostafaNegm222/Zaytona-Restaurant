@@ -8,7 +8,7 @@ const currentItemId = ref(null);
 // Loading states for buttons
 const isEditLoading = ref(false);
 const isAddLoading = ref(false);
-
+const isDeleteLoading = ref(false)
 // For edit form
 const editForm = ref({
   name: "",
@@ -107,6 +107,7 @@ const totalPages = computed(() => {
 // Handle delete item
 const deleteItem = async () => {
   try {
+    isDeleteLoading.value = true
     const response = await useApi(
       `/menu/deleteMenuItem/${currentItemId.value}`,
       "delete"
@@ -146,6 +147,7 @@ const deleteItem = async () => {
     });
   } finally {
     open.value = false;
+    isDeleteLoading.value = false;
   }
 };
 
@@ -597,6 +599,7 @@ const handleAddImageUpload = (event) => {
                     Cancel
                   </UButton>
                   <UButton
+                  :loading="isDeleteLoading"
                     class="px-8 py-2 md:px-16 md:py-2 text-sm  text-white bg-red-700 rounded cursor-pointer hover:text-white"
                     @click="deleteItem"
                   >
