@@ -154,7 +154,7 @@ const isPasswordVisible = ref(false);
         <div class="flex-grow border-t border-primary" />
       </div>
 
-      <AuthGoogle />
+      <AuthGoogle/>
     </UForm>
 
     <p class="mt-4 text-center text-sm cursor-default text-dark-blue">
