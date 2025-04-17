@@ -122,7 +122,7 @@ const deleteItem = async () => {
 
       // Refresh data after deletion
       await fetchMenuItems();
-      
+      open.value = false;
       const isLastItemOnPage = paginatedData.value.length === 1;
       if (isLastItemOnPage && page.value > 1) {
         nextTick(() => {
@@ -565,7 +565,7 @@ const handleAddImageUpload = (event) => {
           </UModal>
 
           <UModal
-            v-model="open"
+            v-model:open="open"
             :ui="{
               content:
                 'bg-transparent border-0 shadow-none rounded-none divided-none ring-transparent ',
