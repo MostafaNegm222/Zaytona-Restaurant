@@ -35,7 +35,7 @@ const columns = [
 
 const table = useTemplateRef("table");
 const page = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(8);
 const columnFilters = ref([
   {
     id: "email",

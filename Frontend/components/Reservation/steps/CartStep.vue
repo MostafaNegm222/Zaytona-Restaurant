@@ -27,7 +27,7 @@
       class="h-48 hidden lg:block"
     />
 
-    <div class="px-8 lg:w-[60%] flex flex-col">
+    <div class="px-2 md:px-8 md:w-[60%] w-full flex flex-col">
       <!-- Initial Choice -->
       <div v-if="!formData.cart.preOrder && !proceedingToNext">
         <h1
@@ -41,8 +41,8 @@
             <UButton
               label="Yes, I'd like to pre-order"
               class="bg-primary text-white cursor-pointer hover:text-white w-full md:w-[50%]"
-              @click="enablePreOrder"
               :disabled="loading"
+              @click="enablePreOrder"
             />
             <UButton
               label="No, I'll order at the restaurant"
@@ -91,7 +91,7 @@
       <!-- Cart Summary (only visible when items selected but menu closed) -->
       <div
         v-if="formData.cart.preOrder && cartItems.length > 0 && !showMenu"
-        class="mt-6"
+        class="mt-6 w-full"
       >
         <h1 class="text-2xl font-bold mb-4 text-primary cursor-default">
           Your Pre-Order
@@ -102,7 +102,7 @@
             <h3 class="font-bold text-lg flex items-center">
               <span class="mr-2 cursor-default">Your Order</span>
               <span
-                class="bg-primary text-white text-xs rounded-full px-2 py-1 cursor-default"
+                class="bg-primary text-white text-xs rounded px-3 py-1 flex justify-center items-center text-center cursor-default ms-2"
                 >{{ getTotalItems() }} items</span
               >
             </h3>
@@ -201,7 +201,7 @@
             <UIcon name="i-heroicons-exclamation-triangle" class="text-red-500 h-12 w-12 mx-auto mb-4" />
             <h3 class="text-xl font-bold text-red-700 mb-2">Unable to Load Menu</h3>
             <p class="text-red-600 mb-4">{{ error }}</p>
-            <UButton label="Try Again" color="primary" @click="fetchMenuItems" class="cursor-pointer" />
+            <UButton label="Try Again" color="primary" class="cursor-pointer" @click="fetchMenuItems" />
           </div>
 
           <!-- Menu Content when loaded -->
@@ -240,16 +240,19 @@
                       :alt="item.title || item.name"
                       class="h-full w-full object-contain"
                     >
-                    <div
-                      class="absolute top-0 right-0 m-2 px-3 py-1 text-xl  text-primary cursor-default font-bold"
+                  
+                  </div>
+                  <div class="p-4 flex flex-col flex-grow">
+                    <div class="flex justify-between">
+                      <h3 class="font-bold text-lg mb-2 cursor-default">
+                        {{ item.title || item.name }}
+                      </h3>
+                      <div
+                      class="text-xl  text-primary cursor-default font-bold"
                     >
                       {{ item.price }} EGP
                     </div>
-                  </div>
-                  <div class="p-4 flex flex-col flex-grow">
-                    <h3 class="font-bold text-lg mb-2 cursor-default">
-                      {{ item.title || item.name }}
-                    </h3>
+                    </div>
                     <p class="text-gray-600 mb-auto cursor-default">
                       {{ item.description }}
                     </p>

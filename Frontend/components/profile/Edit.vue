@@ -16,9 +16,8 @@ const schema = z.object({
   userName: z.string().min(1, "User Name is required"),
   phoneNumber: z
     .string()
-    .min(10, "Mobile number must be at least 10 digits")
-    .max(15, "Mobile number too long"),
-});
+    .regex(/^(010|011|012|015)[0-9]{8}$/, "Invalid Egyptian mobile number"),
+})
 
 // error handling
 const errorMsg = reactive({
