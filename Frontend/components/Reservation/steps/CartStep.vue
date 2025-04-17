@@ -42,6 +42,7 @@
               label="Yes, I'd like to pre-order"
               class="bg-primary text-white cursor-pointer hover:text-white w-full md:w-[50%]"
               @click="enablePreOrder"
+              :disabled="loading"
             />
             <UButton
               label="No, I'll order at the restaurant"
@@ -188,135 +189,141 @@
 
         <!-- Menu Content -->
         <div class="p-6 overflow-y-auto flex-1">
-          <!-- Category Navigation -->
-          <div class="flex overflow-x-auto space-x-2 pb-3 mb-6 scrollbar-hide">
-            <UButton
-              v-for="category in categories"
-              :key="category"
-              :label="category"
-              :variant="selectedCategory === category ? 'solid' : 'outline'"
-              color="primary"
-              class="whitespace-nowrap cursor-pointer"
-              @click="selectCategory(category)"
-            />
+          <!-- Loading State -->
+          <div v-if="loading" class="flex flex-col items-center justify-center py-10">
+            <UIcon name="i-heroicons-arrow-path" class="text-primary h-12 w-12 animate-spin mb-4" />
+            <h3 class="text-xl font-medium text-gray-700 mb-2">Loading Menu</h3>
+            <p class="text-gray-500">Please wait while we fetch the menu items...</p>
+          </div>
+          
+          <!-- Error State -->
+          <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+            <UIcon name="i-heroicons-exclamation-triangle" class="text-red-500 h-12 w-12 mx-auto mb-4" />
+            <h3 class="text-xl font-bold text-red-700 mb-2">Unable to Load Menu</h3>
+            <p class="text-red-600 mb-4">{{ error }}</p>
+            <UButton label="Try Again" color="primary" @click="fetchMenuItems" class="cursor-pointer" />
           </div>
 
-          <!-- Menu Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              v-for="(item, index) in paginatedMenuItems"
-              :key="index"
-              class="border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
-            >
-              <div class="flex flex-col h-full">
-                <div class="relative h-48">
-                  <img
-                    :src="item.image?.secure_url || item.image"
-                    :alt="item.title || item.name"
-                    class="h-full w-full object-contain"
-                  >
-                  
-                </div>
-                <div class="p-4 flex flex-col flex-grow">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold text-lg cursor-default">
-                    {{ item.title || item.name }}
-                  </h3>
-                  <div
-                    class="text-xl  text-primary cursor-default font-bold"
-                  >
-                    {{ item.price }} EGP
-                  </div>
-                  </div>
-                  <p class="text-gray-600 mb-auto cursor-default">
-                    {{ item.description }}
-                  </p>
+          <!-- Menu Content when loaded -->
+          <div v-else>
+            <!-- Category Navigation -->
+            <div class="flex overflow-x-auto space-x-2 pb-3 mb-6 scrollbar-hide">
+              <UButton
+                v-for="category in categories"
+                :key="category"
+                :label="category"
+                :variant="selectedCategory === category ? 'solid' : 'outline'"
+                color="primary"
+                class="whitespace-nowrap cursor-pointer"
+                @click="selectCategory(category)"
+              />
+            </div>
 
-                  <!-- Quantity Controls -->
-                  <div class="flex items-center justify-end mt-4">
-                    <div
-                      v-if="getCartItem(item._id)"
-                      class="flex items-center space-x-3 border border-gray-200 rounded-lg px-2 py-1"
+            <!-- Empty Menu State -->
+            <div v-if="filteredMenuByCategory.length === 0" class="text-center py-10">
+              <UIcon name="i-heroicons-clipboard" class="text-gray-400 h-12 w-12 mx-auto mb-4" />
+              <h3 class="text-xl font-medium text-gray-700 mb-2">No Items Available</h3>
+              <p class="text-gray-500">No menu items found in this category.</p>
+            </div>
+
+            <!-- Menu Cards -->
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div
+                v-for="(item, index) in paginatedMenuItems"
+                :key="index"
+                class="border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
+              >
+                <div class="flex flex-col h-full">
+                  <div class="relative h-48">
+                    <img
+                      :src="item.image?.secure_url || item.image"
+                      :alt="item.title || item.name"
+                      class="h-full w-full object-contain"
                     >
+                    <div
+                      class="absolute top-0 right-0 m-2 px-3 py-1 text-xl  text-primary cursor-default font-bold"
+                    >
+                      {{ item.price }} EGP
+                    </div>
+                  </div>
+                  <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-bold text-lg mb-2 cursor-default">
+                      {{ item.title || item.name }}
+                    </h3>
+                    <p class="text-gray-600 mb-auto cursor-default">
+                      {{ item.description }}
+                    </p>
+
+                    <!-- Quantity Controls -->
+                    <div class="flex items-center justify-end mt-4">
+                      <div
+                        v-if="getCartItem(item._id)"
+                        class="flex items-center space-x-3 border border-gray-200 rounded-lg px-2 py-1"
+                      >
+                        <UButton
+                          icon="i-heroicons-minus"
+                          color="primary"
+                          variant="ghost"
+                          class="h-8 w-8 cursor-pointer"
+                          @click="decreaseQuantity(item)"
+                        />
+                        <span class="text-lg font-medium w-6 text-center">{{
+                          getCartItem(item._id).quantity
+                        }}</span>
+                        <UButton
+                          icon="i-heroicons-plus"
+                          color="primary"
+                          variant="ghost"
+                          class="h-8 w-8 cursor-pointer"
+                          @click="increaseQuantity(item)"
+                        />
+                      </div>
                       <UButton
-                        icon="i-heroicons-minus"
-                        color="primary"
-                        variant="ghost"
-                        class="h-8 w-8 cursor-pointer"
-                        @click="decreaseQuantity(item)"
-                      />
-                      <span class="text-lg font-medium w-6 text-center">{{
-                        getCartItem(item._id).quantity
-                      }}</span>
-                      <UButton
+                        v-else
+                        label="Add to Cart"
                         icon="i-heroicons-plus"
-                        color="primary"
-                        variant="ghost"
-                        class="h-8 w-8 cursor-pointer"
-                        @click="increaseQuantity(item)"
+                        class="bg-primary text-white cursor-pointer"
+                        @click="addToCart(item)"
                       />
                     </div>
-                    <UButton
-                      v-else
-                      label="Add to Cart"
-                      icon="i-heroicons-plus"
-                      class="bg-primary text-white cursor-pointer"
-                      @click="addToCart(item)"
-                    />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <!-- Pagination Controls - Updated to match the style in index.vue -->
-          <div v-if="totalPages > 1" class="flex items-center justify-center my-8">
-            <!-- Previous Button -->
-            <button 
-              :disabled="currentPage === 1"
-              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
-              :class="currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'"
-              @click="currentPage--"
-            >
-              <span>Previous</span>
-            </button>
             
-            <!-- Ellipsis if needed -->
-            <span v-if="showLeftEllipsis" class="mx-1">...</span>
-            
-            <!-- Page Numbers -->
-            <button
-              v-for="page in visiblePageNumbers"
-              :key="page"
-              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
-              :class="currentPage === page ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'"
-              @click="currentPage = page"
-            >
-              <span>{{ page }}</span>
-            </button>
-            
-            <!-- Ellipsis if needed -->
-            <span v-if="showRightEllipsis" class="mx-1">...</span>
-            
-            <!-- Last Page -->
-            <button
-              v-if="showLastPageButton"
-              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
-              :class="currentPage === totalPages ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'"
-              @click="currentPage = totalPages"
-            >
-              <span>{{ totalPages }}</span>
-            </button>
-            
-            <!-- Next Button -->
-            <button 
-              :disabled="currentPage === totalPages"
-              class="min-w-8 h-8 flex items-center justify-center rounded-full mx-1"
-              :class="currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'"
-              @click="currentPage++"
-            >
-              <span>Next</span>
-            </button>
+            <!-- Pagination Controls -->
+            <div v-if="totalPages > 1" class="flex justify-center mt-8">
+              <div class="flex space-x-2">
+                <UButton
+                  icon="i-heroicons-chevron-left"
+                  color="primary"
+                  variant="ghost"
+                  class="cursor-pointer flex justify-center items-center"
+                  :disabled="currentPage === 1"
+                  @click="currentPage--"
+                />
+                <div class="flex space-x-1">
+                  <UButton
+                    v-for="page in paginationRange"
+                    :key="page"
+                    :variant="currentPage === page ? 'solid' : 'outline'"
+                    color="primary"
+                    class="w-10 h-10 cursor-pointer flex justify-center items-center"
+                    @click="currentPage = page"
+                  >
+                    {{ page }}
+                  </UButton>
+                </div>
+                <UButton
+                  icon="i-heroicons-chevron-right"
+                  color="primary"
+                  variant="ghost"
+                  class="cursor-pointer"
+                  :disabled="currentPage === totalPages"
+                  @click="currentPage++"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -388,7 +395,6 @@ const error = ref(null);
 // Pagination
 const currentPage = ref(1);
 const itemsPerPage = 6; // Show 6 items per page
-const visiblePageCount = 5; // For consistent pagination display
 
 // Initialize cart if not already done
 if (!props.formData.cart) {
@@ -398,22 +404,30 @@ if (!props.formData.cart) {
   });
 }
 
-// Fetch menu items on component mount
-onMounted(async () => {
+// Function to fetch menu items
+const fetchMenuItems = async () => {
   try {
     loading.value = true;
+    error.value = null;
+    
     const response = await useApi('/menu/getMenu', "get");
     console.log('API Response:', response); 
+    
     if (response && response.results) {
       menuItems.value = response.results;
+    } else {
+      error.value = 'Unable to load menu items';
     }
   } catch (err) {
     console.error('Error fetching menu items:', err);
-    error.value = 'Failed to load menu items';
+    error.value = err.message || 'Failed to load menu items';
   } finally {
     loading.value = false;
   }
-});
+};
+
+// Fetch menu items on component mount
+onMounted(fetchMenuItems);
 
 // Watch category changes to reset pagination
 watch(selectedCategory, () => {
@@ -455,40 +469,43 @@ const totalPages = computed(() => {
   return Math.ceil(filteredMenuByCategory.value.length / itemsPerPage);
 });
 
-// Create pagination range (for display) - updated to match index.vue pagination
-const visiblePageNumbers = computed(() => {
-  const total = totalPages.value;
-  const current = currentPage.value;
-  const halfVisible = Math.floor(visiblePageCount / 2);
+// Create pagination range (for display)
+const paginationRange = computed(() => {
+  const range = [];
+  const maxVisible = 5; // Max number of page buttons to show
   
-  // Simple case: if we have fewer pages than our display limit, show all
-  if (total <= visiblePageCount + 2) {
-    return Array.from({ length: total }, (_, i) => i + 1);
+  if (totalPages.value <= maxVisible) {
+    // Show all pages
+    for (let i = 1; i <= totalPages.value; i++) {
+      range.push(i);
+    }
+  } else {
+    // Always show first page
+    range.push(1);
+    
+    // Calculate start and end of central range
+    let start = Math.max(2, currentPage.value - 1);
+    let end = Math.min(totalPages.value - 1, currentPage.value + 1);
+    
+    // Adjust when at edges
+    if (currentPage.value <= 2) {
+      end = 4;
+    } else if (currentPage.value >= totalPages.value - 1) {
+      start = totalPages.value - 3;
+    }
+    
+    // Add page numbers
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    
+    // Always show last page
+    if (!range.includes(totalPages.value)) {
+      range.push(totalPages.value);
+    }
   }
   
-  let start = Math.max(2, current - halfVisible);
-  let end = Math.min(total - 1, start + visiblePageCount - 1);
-  
-  // Adjust start if we're near the end
-  if (end === total - 1) {
-    start = Math.max(2, end - visiblePageCount + 1);
-  }
-  
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-});
-
-// Logic for showing ellipsis and first/last buttons
-const showLastPageButton = computed(() => {
-  return totalPages.value > 2 && !visiblePageNumbers.value.includes(totalPages.value);
-});
-
-const showLeftEllipsis = computed(() => {
-  return visiblePageNumbers.value.length > 0 && visiblePageNumbers.value[0] > 2;
-});
-
-const showRightEllipsis = computed(() => {
-  return visiblePageNumbers.value.length > 0 && 
-         visiblePageNumbers.value[visiblePageNumbers.value.length - 1] < totalPages.value - 1;
+  return range;
 });
 
 // Get paginated menu items for current page

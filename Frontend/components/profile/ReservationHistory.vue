@@ -73,7 +73,7 @@ const cancelReservation = async () => {
         {{ reservation.createdBy.userName || "Unknown Name" }}
       </h3>
 
-      <div class="my-4 md:w-[80%] w-full mx-auto p-2">
+      <div class="my-4 md:w-[80%] w-[90%] mx-auto p-2">
         <div class="flex justify-between items-center">
           <h2 class="font-bold md:text-lg">Status:</h2>
           <span
