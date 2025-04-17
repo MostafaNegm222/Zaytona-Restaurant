@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-const Home = '/images/Home/Group 4.png'; 
+const Home = '../../assets/images/Home/Group 4.png'; 
 </script>
 
 <style scoped>

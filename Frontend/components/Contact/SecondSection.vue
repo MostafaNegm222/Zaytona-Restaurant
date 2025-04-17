@@ -109,6 +109,6 @@
 </template>
 
 <script setup>
-  const img1 = 'images/contact/img1.png';
-  const img2 = 'images/contact/img2.png';
+  const img1 = '../../assets/images/contact/img1.png';
+  const img2 = '../../assets/images/contact/img2.png';
 </script>

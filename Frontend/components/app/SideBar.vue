@@ -397,7 +397,7 @@
 </template>
 
 <script setup>
-const logo = '/images/LOGO.png';
+const logo = '../../assets/images/LOGO.png';
 const auth = useAuth();
 
 </script>

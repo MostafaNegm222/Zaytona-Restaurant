@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-const reservation = '/images/Home/reservation.png';
+const reservation = '../../assets/images/Home/reservation.png';
 </script>
 
 
