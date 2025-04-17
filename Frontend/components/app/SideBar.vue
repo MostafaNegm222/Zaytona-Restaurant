@@ -6,7 +6,7 @@
   >
     <div class="logo text-center py-8 px-0 border-b border-white/20">
       <img
-        src="../../assets/images/LOGO.png"
+        :src="logo"
         alt="logo"
         class="w-20 md:w-32 mx-auto"
       >
@@ -15,7 +15,8 @@
     <div class="flex flex-col h-[80vh] justify-between">
       <div>
         <ul class="second-nav list-none p-0 m-0">
-          <li v-for="(item, index) in navItems" :key="index"
+          <li 
+          v-for="(item, index) in navItems" :key="index"
             class="nav-item relative py-4 px-6 my-2 mx-4 rounded-lg cursor-pointer transition-all duration-300 hover:bg-white/20 hover:translate-x-2"
           >
             <nuxt-link :to="item.path" class="inline-flex items-center gap-4">
@@ -54,7 +55,7 @@
     <UContainer class="py-4">
       <div class="flex justify-between items-center">
         <div>
-          <img src="../../assets/images/LOGO.png" alt="logo" class="w-24" >
+          <img :src="logo" alt="logo" class="w-24" >
         </div>
         <div>
           <UButton
@@ -77,10 +78,11 @@
       leave-from-class="opacity-100" 
       leave-to-class="opacity-0"
     >
-      <div v-if="isDrawerOpen" 
+      <div 
+        v-if="isDrawerOpen" 
         class="fixed inset-0 z-40 bg-black/50"
         @click="closeDrawer"
-      ></div>
+      />
     </transition>
     
     <!-- Mobile Navigation Drawer (separate from overlay) -->
@@ -92,11 +94,12 @@
       leave-from-class="translate-x-0" 
       leave-to-class="-translate-x-full"
     >
-      <div v-if="isDrawerOpen" 
+      <div 
+        v-if="isDrawerOpen" 
         class="fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm bg-primary text-white h-full overflow-y-auto shadow-lg"
       >
         <div class="p-4 flex justify-between items-center border-b border-white/20">
-          <img src="../../assets/images/LOGO.png" alt="logo" class="w-20" >
+          <img :src="logo" alt="logo" class="w-20" >
           <UButton
             color="white" 
             variant="ghost"
@@ -109,7 +112,8 @@
         <div class="flex flex-col h-[calc(100%-80px)] justify-between p-2">
           <div>
             <ul class="list-none p-0 m-0">
-              <li v-for="(item, index) in navItems" :key="index"
+              <li 
+                v-for="(item, index) in navItems" :key="index"
                 class="nav-item relative py-4 px-4 my-2 rounded-lg cursor-pointer transition-all duration-300 hover:bg-white/20"
               >
                 <nuxt-link :to="item.path" class="inline-flex items-center gap-4" @click="closeDrawer">
@@ -144,6 +148,7 @@
 </template>
 
 <script setup>
+import logo from '../../assets/images/logos/Logo.png'
 const auth = useAuth();
 const isDrawerOpen = ref(false);
 
