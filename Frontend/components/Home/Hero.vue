@@ -40,7 +40,7 @@
 
       <div class="relative w-full justify-end hidden md:block">
         <img
-          src="/assets/images/Home/Group 4.png"
+          src="../../assets/images/Home/Group 4.png"
           alt="hero image"
           class="w-[80%] md:w-[100%] max-w-[800px] absolute top-[0%] right-0"
         >

@@ -68,7 +68,7 @@
 
       <div class="flex justify-center md:justify-end order-first md:order-0">
         <img
-          src="/assets/images/Contact/img2.png"
+          src="../../assets/images/Contact/img2.png"
           alt="image 2"
           class="w-[80%]"
         >
@@ -82,7 +82,7 @@
     >
       <div class="flex justify-center md:justify-start">
         <img
-          src="/assets/images/Contact/img1.png"
+          src="../../assets/images/Contact/img1.png"
           alt="image 1"
           class="w-[80%]"
         >
