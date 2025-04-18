@@ -496,7 +496,7 @@ const handleAddImageUpload = (event) => {
 
         <div class="flex justify-between gap-5">
           <!-- Edit Modal -->
-          <UModal v-model:open="editModalOpen" title="Edit Menu Item">
+          <UModal v-model="editModalOpen" title="Edit Menu Item">
             <UButton
               label="Edit"
               color="neutral"
