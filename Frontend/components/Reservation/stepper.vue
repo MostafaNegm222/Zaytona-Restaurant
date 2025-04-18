@@ -130,8 +130,8 @@
                 />
               </svg>
             </button>
-
-            <button
+              
+            <!-- <button
               v-if="currentStep === steps.length - 1"
               class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary cursor-pointer flex items-center md:mr-5"
               :disabled="isLoading"
@@ -161,7 +161,22 @@
                 </svg>
                 Submit
               </template>
-            </button>
+            </button> -->
+            <UButton
+                v-if="currentStep === steps.length - 1"
+                :loading="isLoading"
+                :disabled="isLoading"
+                icon="i-heroicons-check"
+                color="primary"
+                class="md:mr-5"
+                @click="submitForm"
+              >
+                <template #leading>
+                  <UIcon v-if="!isLoading" name="i-heroicons-check" />
+                  <USpinner v-else size="sm" />
+                </template>
+                {{ isLoading ? 'Processing...' : 'Submit' }}
+              </UButton>
           </div>
         </div>
  
