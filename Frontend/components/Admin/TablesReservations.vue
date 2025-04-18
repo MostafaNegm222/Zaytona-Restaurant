@@ -15,7 +15,7 @@ const detailsModalOpen = ref(false);
 const confirmModalOpen = ref(false);
 const actionType = ref(""); // 'confirm' or 'cancel'
 const loadingDetails = ref(false);
-
+const isLoadingConfirm = ref(false)
 // Fetch checkouts from API
 async function fetchReservations() {
   loading.value = true;
@@ -87,6 +87,7 @@ async function fetchReservationById(id) {
 // Call API to update reservation status
 async function updateReservationStatus(reservationId, status) {
   try {
+    isLoadingConfirm.value = true
     const response = await useApi(
       `/admin/changeCheckOutStatus/${reservationId}`,
       "patch",
@@ -130,6 +131,8 @@ async function updateReservationStatus(reservationId, status) {
       icon: "i-lucide-alert-circle",
     });
     return false;
+  } finally {
+    isLoadingConfirm.value = false;
   }
 }
 
@@ -394,6 +397,7 @@ onMounted(() => {
                       class=" mx-auto flex justify-between gap-8"
                     >
                       <UButton
+                      :loading="isLoadingConfirm"
                         color="success"
                         icon="i-lucide-check"
                         @click="
