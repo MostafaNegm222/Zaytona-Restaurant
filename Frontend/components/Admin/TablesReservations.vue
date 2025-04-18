@@ -397,7 +397,6 @@ onMounted(() => {
                       class=" mx-auto flex justify-between gap-8"
                     >
                       <UButton
-                      :loading="isLoadingConfirm"
                         color="success"
                         icon="i-lucide-check"
                         @click="
@@ -443,6 +442,7 @@ onMounted(() => {
                           Cancel
                         </UButton>
                         <UButton
+                        :loading="isLoadingConfirm"
                           :color="
                             actionType === 'confirm' ? 'success' : 'error'
                           "
