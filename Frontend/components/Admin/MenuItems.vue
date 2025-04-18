@@ -567,7 +567,7 @@ const handleAddImageUpload = (event) => {
           </UModal>
 
           <UModal
-            v-model:open="open"
+            v-model="open"
             :ui="{
               content:
                 'bg-transparent border-0 shadow-none rounded-none divided-none ring-transparent ',
