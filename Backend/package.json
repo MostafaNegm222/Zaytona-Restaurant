@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start:dev": "nodemon --env-file=./src/config/.env ./index.js ",
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "engines": {
     "node": "22.x"
@@ -33,5 +34,8 @@
     "slugify": "^1.6.6",
     "stripe": "^18.0.0",
     "twilio": "^5.5.2"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2"
   }
 }
