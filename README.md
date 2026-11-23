@@ -2,6 +2,14 @@
 
 A restaurant website with online table reservation. Visitors browse the menu and story pages, create an account, and book a table through a step-by-step flow with an optional pre-ordered meal and card payment. Admins manage the menu, reservations and users. The frontend is Nuxt 3, the backend is an Express and MongoDB REST API.
 
+**Live demo:** https://zaytona-restaurant.vercel.app
+
+## Credits and origin
+
+This repository is a second copy of a project that is based on [MohamedRefat7/Zaytouna-Restaurant](https://github.com/MohamedRefat7/Zaytouna-Restaurant). The Express and MongoDB backend here is the same code as in that repository. Only `Backend/package.json` differs, where the Jest test script and dev dependency were added. The original project and its backend design belong to its authors. This copy was taken by Mostafa Negm to deploy the application, with his own changes to responsiveness and styling.
+
+Mostafa's own work in this copy, as recorded in the commit history of `Frontend/`: fixes to responsive layout issues, logo and footer image paths, the reservation and cancel flows, loading states on the confirm and delete actions, the delete modal and logout behaviour. The 16 backend tests were added later and are described below.
+
 ## What it does
 
 **Website (`Frontend/`, Nuxt 3)**
