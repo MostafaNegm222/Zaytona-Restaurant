@@ -1,19 +1,69 @@
 # Zaytona Restaurant
 
-A restaurant website with online table reservation. Visitors browse the menu and story pages, create an account, and book a table through a step-by-step flow with an optional pre-ordered meal and card payment. Admins manage the menu, reservations and users. The frontend is Nuxt 3, the backend is an Express and MongoDB REST API.
+## 1. Description
 
-**Live demo:** https://zaytona-restaurant.vercel.app
+A restaurant website with online table reservation. Visitors browse the menu and story pages, create an account, and book a table through a step-by-step flow with an optional pre-ordered meal and card payment. Admins manage the menu, reservations and users. The frontend is Nuxt 3; the backend is an Express and MongoDB REST API.
 
-## Credits and origin
+**Credits and origin:** this repository is a copy of a project based on [MohamedRefat7/Zaytouna-Restaurant](https://github.com/MohamedRefat7/Zaytouna-Restaurant); the original project and backend design belong to its authors. This copy adds Mostafa Negm's own changes (responsiveness and styling fixes, reservation and cancel flow fixes, loading states, the delete modal and logout behaviour) plus a Jest test setup for the backend.
 
-This repository is a second copy of a project that is based on [MohamedRefat7/Zaytouna-Restaurant](https://github.com/MohamedRefat7/Zaytouna-Restaurant). The Express and MongoDB backend here is the same code as in that repository. Only `Backend/package.json` differs, where the Jest test script and dev dependency were added. The original project and its backend design belong to its authors. This copy was taken by Mostafa Negm to deploy the application, with his own changes to responsiveness and styling.
+## 2. Technologies and Versions
 
-Mostafa's own work in this copy, as recorded in the commit history of `Frontend/`: fixes to responsive layout issues, logo and footer image paths, the reservation and cancel flows, loading states on the confirm and delete actions, the delete modal and logout behaviour. The 16 backend tests were added later and are described below.
+- **Frontend (`Frontend/`)**: Nuxt ^3.16.0 (Vue 3), @nuxt/ui ^3.0.0, Pinia ^3.0.1 with @pinia/nuxt ^0.10.1, Leaflet ^1.9.4 maps with vue-leaflet ^0.1.0, Zod ^3.24.2, TypeScript ^5.8.2
+- **Backend (`Backend/`)**: Node.js 22.x with Express ^4.21.2, MongoDB with Mongoose ^8.13.1, JWT ^9.0.2 (access + refresh tokens), bcrypt ^5.1.1, Joi ^17.13.3 (validation), Stripe ^18.0.0 (card payments), Cloudinary ^2.6.0 with Multer ^1.4.5 (image upload), Nodemailer ^6.10.0 (email), Twilio ^5.5.2 (SMS), google-auth-library ^9.15.1 (Google sign-in), crypto-js ^4.2.0, nanoid ^5.1.5, slugify ^1.6.6
+- **Tests**: Jest ^30.5.2 (backend), nodemon ^3.1.9 (dev)
 
-## What it does
+## 3. Requirements and Dependencies
+
+- Node.js 22.x (see `Backend/package.json` engines)
+- A MongoDB database (local or Atlas)
+- Stripe, Cloudinary, Twilio, Google and SMTP credentials for the related features
+- Dependencies are installed with `npm install` inside `Backend/` and `Frontend/`
+
+## 4. Installation and Run Steps
+
+```bash
+git clone https://github.com/MostafaNegm222/Zaytona-Restaurant.git
+cd Zaytona-Restaurant
+```
+
+**Backend**
+
+```bash
+cd Backend
+npm install
+# create Backend/src/config/.env with the variables from section 5
+npm start          # node ./index.js
+# or: npm run start:dev   # nodemon, loads ./src/config/.env automatically
+```
+
+**Frontend** (in a second terminal)
+
+```bash
+cd Frontend
+npm install
+npm run dev        # Nuxt dev server
+```
+
+## 5. Environment Variables
+
+The backend reads `Backend/src/config/.env` (see the `start:dev` script). No secrets are stored in the repo. Variables used in the code:
+
+| Variable | Purpose |
+| --- | --- |
+| `PORT` | API port (default 8000) |
+| `DB_URI` | MongoDB connection string |
+| `USER_ACCESS_TOKEN`, `USER_REFRESH_TOKEN`, `ADMIN_ACCESS_TOKEN`, `ADMIN_REFRESH_TOKEN` | JWT signing secrets per role/token type |
+| `ACCESS_TOKEN_EXPIRE`, `REFRESH_TOKEN_EXPIRE` | Token lifetimes |
+| `CLIENT_ID` | Google sign-in (OAuth Client ID) |
+| `EMAIL`, `PASS` | SMTP account for outgoing email |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | Twilio SMS |
+| `CLOUD_NAME`, `API_KEY`, `API_SECRET` | Cloudinary image storage |
+
+## 6. Usage and Main Features
 
 **Website (`Frontend/`, Nuxt 3)**
-- Home, story, contact and menu pages. The menu has search, filter, sort, pagination, item details and related items.
+
+- Home, story, contact and menu pages; the menu has search, filter, sort, pagination, item details and related items.
 - Sign up with email code (OTP), login, forgot and reset password, Google sign-in.
 - Reservation stepper: date, number of guests, meal type, cart, contact info, payment and a final review.
 - Profile: view and edit details, change password, delete account, reservation history.
@@ -21,6 +71,7 @@ Mostafa's own work in this copy, as recorded in the commit history of `Frontend/
 - Route middleware for authentication, and separate layouts for the public site, auth pages, profile, reservation and admin.
 
 **API (`Backend/`)**
+
 - `/auth`: register, confirm email, login, login with Google, refresh token, forgot and reset password.
 - `/menu`, `/category`, `/subCategory`: menu items and their categories, with image upload to Cloudinary.
 - `/cart` and `/checkOut`: cart handling and checkout, with Stripe for card payments.
@@ -28,68 +79,15 @@ Mostafa's own work in this copy, as recorded in the commit history of `Frontend/
 - `/user` and `/admin`: profile routes for users, management routes for admins.
 - Joi validation on request data, JWT access and refresh tokens, bcrypt hashing, email through Nodemailer, SMS through Twilio, one global error handler.
 
-## Tech stack
+## 7. Screenshots / Demo
 
-- **Frontend:** Nuxt 3, Vue 3, Pinia, Nuxt UI, Leaflet maps, Zod
-- **Backend:** Node.js 22 (ES modules), Express 4, MongoDB with Mongoose 8, Joi, JWT, bcrypt, Stripe, Cloudinary and Multer, Nodemailer, Twilio, google-auth-library
-- **Tests:** Jest on the backend
-- **Deployment file:** `Backend/vercel.json`
+- Live demo: https://zaytona-restaurant.vercel.app
 
-## Project structure
-
-```
-├── Backend/
-│   ├── index.js            # Entry point
-│   ├── src/app.controller.js   # Middleware and routes
-│   ├── src/Modules/        # One folder per feature: controller, service, validation
-│   ├── src/DB/             # Mongoose connection and models
-│   ├── src/middleware/  src/utils/
-│   └── tests/              # Jest tests
-└── Frontend/
-    ├── pages/  components/  layouts/  middleware/
-    ├── composables/        # API and auth helpers
-    └── nuxt.config.ts
-```
-
-## Run it locally
-
-You need Node.js 22 and a MongoDB database.
-
-**Backend**
-
-```bash
-cd Backend
-npm install
-```
-
-Create `Backend/src/config/.env` with these variables (all are read by the code): `PORT`, `DB_URI`, `SALT`, `EMAIL`, `PASS`, `CLIENT_ID` (Google), `CLOUD_NAME`, `API_KEY`, `API_SECRET` (Cloudinary), `STRIPE_SECRET_KEY`, `SUCCESS_URL`, `CANCEL_URL`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `ACCESS_TOKEN_EXPIRE`, `REFRESH_TOKEN_EXPIRE`, `USER_ACCESS_TOKEN`, `USER_REFRESH_TOKEN`, `ADMIN_ACCESS_TOKEN`, `ADMIN_REFRESH_TOKEN` (the token signing secrets).
-
-```bash
-npm run start:dev    # nodemon with the .env file above
-# or: npm start      # node index.js, needs the variables in your environment
-```
-
-The API listens on `PORT` (default 8000) and answers `GET /` with a hello message.
-
-**Frontend**
-
-```bash
-cd Frontend
-npm install
-cp .env.example .env   # BASE_URL (the backend address), GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, USER_ACCESS_TOKEN
-npm run dev
-```
-
-## Tests
+## 8. Running Tests
 
 ```bash
 cd Backend
 npm test
 ```
 
-16 Jest tests cover the shared validation rules (password strength, Egyptian phone numbers, email domains, six digit codes, ObjectId), the auth request schemas, the validation middleware, the hash and token helpers, and the error handlers. They do not need a database or any external service.
-
-## Limits
-
-- Services that call MongoDB, Stripe, Cloudinary, Twilio or email are not covered by tests.
-- There are no automated tests for the Nuxt frontend.
+Jest tests for the backend live in `Backend/tests/`.
